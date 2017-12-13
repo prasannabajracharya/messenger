@@ -55,7 +55,7 @@ public class Message {
 		return "Message [id=" + id + ", message=" + message + ", created=" + created + ", author=" + author + "]";
 	}
 
-	//@XmlTransient
+	@XmlTransient // annotation to hide comments while doing getMessages()
 	public Map<Long, Comment> getComments() {
 		return comments;
 	}
