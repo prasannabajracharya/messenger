@@ -62,5 +62,11 @@ public class Profile {
 		this.date = date;
 	}
 
+	@Override
+	public String toString() {
+		return "Profile [id=" + id + ", profileName=" + profileName + ", firstName=" + firstName + ", lastName="
+				+ lastName + ", date=" + date + "]";
+	}
+
 	
 }

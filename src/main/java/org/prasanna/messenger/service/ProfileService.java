@@ -1,5 +1,43 @@
 package org.prasanna.messenger.service;
 
-public class ProfileService {
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
+import org.prasanna.messenger.database.DatabaseClass;
+import org.prasanna.messenger.model.Profile;
+
+public class ProfileService {
+	private Map<String, Profile> profiles = DatabaseClass.getProfiles();	
+	
+	public ProfileService() {
+		profiles.put("Admin", new Profile(1L, "Admin", "Prasanna", "Bajracharya"));
+		profiles.put("User", new Profile(2L, "User", "Salauna", "Bajracharya"));
+	}
+
+	public List<Profile> getAllProfiles(){	
+		return new ArrayList<Profile>(profiles.values());	
+	}
+	
+	public Profile getProfile(String profileName){
+		return profiles.get(profileName);
+	}
+	
+	public Profile addProfile(Profile profile){
+		profile.setId(profiles.size() + 1);
+		profiles.put(profile.getProfileName(), profile);
+		return profile;
+	}
+	
+	public Profile updateProfile(Profile profile){
+		if(profile.getProfileName().isEmpty()){
+			return null;
+		}
+		profiles.put(profile.getProfileName(), profile);
+		return profile;	
+	}
+	
+	public Profile removeProfile(String profileName){
+		return profiles.remove(profileName);
+	}
 }
