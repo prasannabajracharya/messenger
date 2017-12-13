@@ -2,6 +2,7 @@ package org.prasanna.messenger.resources;
 
 import java.util.List;
 
+import javax.ws.rs.BeanParam;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -10,9 +11,11 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
 import org.prasanna.messenger.model.Message;
+import org.prasanna.messenger.resources.beans.MessageFilterBean;
 import org.prasanna.messenger.service.MessageService;
 
 @Path("/messages")
@@ -25,8 +28,19 @@ public class MessageResource {
 	
 	@GET
 	//@Produces(MediaType.APPLICATION_JSON)
-	public List<Message> getMessages(){
-		
+	public List<Message> getMessages(
+//			@QueryParam("year") int year,
+//			@QueryParam("start") int start,
+//			@QueryParam("size") int size
+			
+			@BeanParam MessageFilterBean messageFilterBean
+			){
+		if(messageFilterBean.getYear() > 0){
+			return messageService.getAllMessagesForYear(messageFilterBean.getYear());
+		}
+		if(messageFilterBean.getStart() > 0 && messageFilterBean.getSize() > 0){
+			return messageService.getAllMessagesPaginated(messageFilterBean.getStart(), messageFilterBean.getSize());
+		}
 		return messageService.getAllMessages();
 	}
 	
@@ -54,10 +68,15 @@ public class MessageResource {
 	@DELETE
 	@Path("/{messageId}")
 	public void deleteMessage(@PathParam("messageId") long id){
-		System.out.println("Message deleted:"+messageService.getMessage(id));
 		messageService.removeMessage(id);
 		
 		return;
+	}
+	
+	//comment is a sub-resource inside message resource
+	@Path("/{messageId}/comments")
+	public CommentResource getCommentResource(){
+		return new CommentResource();
 	}
 	
 }

@@ -1,6 +1,7 @@
 package org.prasanna.messenger.service;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
 
@@ -48,5 +49,25 @@ public class MessageService {
 	
 	public Message removeMessage(long id){
 		return messages.remove(id);
+	}
+	
+	public List<Message> getAllMessagesForYear(int year){
+		List<Message> messagesForYear = new ArrayList<>();
+		Calendar cal = Calendar.getInstance();
+		for(Message msg : messages.values()){
+			cal.setTime(msg.getCreated());
+			if(cal.get(Calendar.YEAR) == year){
+				messagesForYear.add(msg);
+			}
+		}
+		return messagesForYear;
+	}
+	
+	public List<Message> getAllMessagesPaginated(int start, int size){
+		ArrayList<Message> list = new ArrayList<Message>(messages.values());
+		if(start + size > list.size()){
+			return new ArrayList<>();
+		}
+		return list.subList(start, size);
 	}
 }
