@@ -24,8 +24,9 @@ import org.prasanna.messenger.service.MessageService;
 
 @Path("/messages")
 //instead of adding @Consumes and @Produces in each method; place it above class
-@Consumes(MediaType.APPLICATION_JSON)
+@Consumes(MediaType.APPLICATION_JSON) // MediaType.APPLICATION_JSON are simple String; public static final APPLICATION_JSON = "application/json"
 @Produces(MediaType.APPLICATION_JSON)
+//@Produces(value={MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML}) // Server can generate both JSON or XML
 public class MessageResource {
 
 	MessageService messageService = new MessageService();
@@ -124,5 +125,19 @@ public class MessageResource {
 	public CommentResource getCommentResource(){
 		return new CommentResource();
 	}
+	
+	//Content Negotiation
+	//Same HTTP request method can invoke different methods that does different things depending on the MediaType.
+	//For eg. @GET for same uri can perform different function depending on the MediaType Accept requests
+	//@GET
+	//@Produces(MediaType.APPLICATION_JSON) // header in HTTP header should be Accept and Value = application/json
+	//public Message getJSONMessage(){
+//	Sysout("Message in JSON format");
+//	}
+//	@GET
+//	@Produces(MediaType.APPLICATION_XML) // header in HTTP header should be Accept and Value = application/xml
+//	public Message getXMLMessage(){
+//		Sysout("Message in XML format");
+//	}
 	
 }
