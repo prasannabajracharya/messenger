@@ -7,6 +7,7 @@ import javax.ws.rs.ext.Provider;
 
 import org.prasanna.messenger.model.ErrorMessage;
 
+//@Provider registers ExceptionMapper to JAX-RS so that whenever exception occurs JAX-RS searches for registered exception mapper type
 @Provider
 public class DataNotFoundExceptionMapper implements ExceptionMapper<DataNotFoundException>{
 

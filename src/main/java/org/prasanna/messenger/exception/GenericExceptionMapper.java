@@ -6,8 +6,8 @@ import javax.ws.rs.ext.ExceptionMapper;
 import javax.ws.rs.ext.Provider;
 
 import org.prasanna.messenger.model.ErrorMessage;
-
-@Provider
+//@Provider registers ExceptionMapper to JAX-RS so that whenever exception occurs JAX-RS searches for registered exception mapper type
+//@Provider // annotation removed because generic exception handling <Throwable> is not good programming practice
 public class GenericExceptionMapper implements ExceptionMapper<Throwable>{
 
 	@Override
