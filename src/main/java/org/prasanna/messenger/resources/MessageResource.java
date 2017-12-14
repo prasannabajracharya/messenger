@@ -51,8 +51,41 @@ public class MessageResource {
 	@GET
 	@Path("/{messageId}")
 	//@Produces(MediaType.APPLICATION_JSON)
-	public Message getMessage(@PathParam("messageId") long id){		
-		return messageService.getMessage(id);
+	public Message getMessage(@PathParam("messageId") long id, @Context UriInfo uriInfo){	
+		Message message = messageService.getMessage(id);
+		message.addLink(getUriForSelf(uriInfo, message), "self");
+		message.addLink(getUriForProfile(uriInfo, message), "profile");
+		message.addLink(getUriForComments(uriInfo, message), "comments");
+		return message;
+	}
+
+	private String getUriForComments(UriInfo uriInfo, Message message) {
+		URI uri = uriInfo.getBaseUriBuilder() // http://localhost:8080/messenger/webapi/
+				.path(MessageResource.class)	// messages/
+				//.path(CommentResource.class)	//does not work because Comment is sub-resource
+				.path(MessageResource.class, "getCommentResource") // not a good idea to hardcode methodname but it is how JAX-RS implementation is. There is builtin class Link but its full of bug
+				.path(CommentResource.class) // not required now because uri is just "/" but may change later; just good programming practice
+				.resolveTemplate("messageId", message.getId()) // replaces dynamic {messageId} in uri with actual messageId
+				.build();
+			return uri.toString();
+	}
+
+	private String getUriForProfile(UriInfo uriInfo, Message message) {
+		String uri = uriInfo.getBaseUriBuilder()
+				.path(ProfileResource.class)
+				.path(message.getAuthor())
+				.build()
+				.toString();
+			return uri;
+	}
+
+	private String getUriForSelf(UriInfo uriInfo, Message message) {
+		String uri = uriInfo.getBaseUriBuilder()
+			.path(MessageResource.class)
+			.path(Long.toString(message.getId()))
+			.build()
+			.toString();
+		return uri;
 	}
 	
 	@POST
